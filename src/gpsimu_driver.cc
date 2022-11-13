@@ -229,7 +229,7 @@ bool GpsImuDriver::handlePacket(velodyne_packet_structs::VelodynePositioningPack
 
   // === IMU Message ===
   sensor_msgs::Imu imumsg;
-  imumsg.header.frame_id="velodyne:"+devip_;
+  imumsg.header.frame_id="/velodyne:"+devip_;
   imumsg.header.stamp = topic_publish_time;
 
   imumsg.linear_acceleration.x = (vpp.gyro_temp_accel_xyz[0].accel_x+vpp.gyro_temp_accel_xyz[0].accel_y)/2.0;
@@ -247,7 +247,7 @@ bool GpsImuDriver::handlePacket(velodyne_packet_structs::VelodynePositioningPack
     sensor_msgs::Temperature tmpmsg;
     tmpmsg.header.stamp = topic_publish_time;
     std::stringstream ss;
-    ss << "velodyne:" << devip_ << i;
+    ss << "/velodyne:" << devip_ << i;
     tmpmsg.header.frame_id = ss.str();
     tmpmsg.header.stamp = ros::Time::now();
     tmpmsg.temperature = vpp.gyro_temp_accel_xyz[i].temp;
