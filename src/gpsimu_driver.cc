@@ -229,16 +229,16 @@ bool GpsImuDriver::handlePacket(velodyne_packet_structs::VelodynePositioningPack
 
   // === IMU Message ===
   sensor_msgs::Imu imumsg;
-  imumsg.header.frame_id="/velodyne:"+devip_;
+  imumsg.header.frame_id="velodyne"+devip_;
   imumsg.header.stamp = topic_publish_time;
 
-  imumsg.linear_acceleration.x = (vpp.gyro_temp_accel_xyz[0].accel_x+vpp.gyro_temp_accel_xyz[0].accel_y)/2.0;
-  imumsg.linear_acceleration.y = (vpp.gyro_temp_accel_xyz[1].accel_x+vpp.gyro_temp_accel_xyz[1].accel_y)/2.0;
-  imumsg.linear_acceleration.z = (vpp.gyro_temp_accel_xyz[2].accel_x+vpp.gyro_temp_accel_xyz[2].accel_y)/2.0;
-  imumsg.angular_velocity.x = vpp.gyro_temp_accel_xyz[0].gyro;
-  imumsg.angular_velocity.y = vpp.gyro_temp_accel_xyz[1].gyro;
-  imumsg.angular_velocity.z = vpp.gyro_temp_accel_xyz[2].gyro;
-  imumsg.orientation_covariance[0] = -1;
+  imumsg.linear_acceleration.x = (vpp.gyro_temp_accel_xyz[0].accel_x+vpp.gyro_temp_accel_xyz[1].accel_y) / 2.0;  // default 0
+  imumsg.linear_acceleration.y = (vpp.gyro_temp_accel_xyz[1].accel_x+vpp.gyro_temp_accel_xyz[0].accel_y) / 2.0;  // default 1
+  imumsg.linear_acceleration.z = (vpp.gyro_temp_accel_xyz[2].accel_x+vpp.gyro_temp_accel_xyz[2].accel_y) / 2.0;  // default 2
+  imumsg.angular_velocity.x = vpp.gyro_temp_accel_xyz[0].gyro;  // default 0
+  imumsg.angular_velocity.y = vpp.gyro_temp_accel_xyz[1].gyro;  // default 1
+  imumsg.angular_velocity.z = vpp.gyro_temp_accel_xyz[2].gyro;  // default 2
+  imumsg.orientation_covariance[0] = 0; // default 0
   imu_pub.publish(imumsg);
 
   // === Temperature Messages ===
@@ -247,7 +247,7 @@ bool GpsImuDriver::handlePacket(velodyne_packet_structs::VelodynePositioningPack
     sensor_msgs::Temperature tmpmsg;
     tmpmsg.header.stamp = topic_publish_time;
     std::stringstream ss;
-    ss << "/velodyne:" << devip_ << i;
+    ss << "velodyne" << devip_ << i;
     tmpmsg.header.frame_id = ss.str();
     tmpmsg.header.stamp = ros::Time::now();
     tmpmsg.temperature = vpp.gyro_temp_accel_xyz[i].temp;
