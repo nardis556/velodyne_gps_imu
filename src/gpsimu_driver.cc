@@ -249,7 +249,7 @@ bool GpsImuDriver::handlePacket(velodyne_packet_structs::VelodynePositioningPack
     std::stringstream ss;
     ss << "velodyne" << devip_ << i;
     tmpmsg.header.frame_id = ss.str();
-    tmpmsg.header.stamp = ros::Time::now();
+    // tmpmsg.header.stamp = ros::Time::now(); // duplicate
     tmpmsg.temperature = vpp.gyro_temp_accel_xyz[i].temp;
     temperature_pub.publish(tmpmsg);
   }
